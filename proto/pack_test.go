@@ -2,6 +2,7 @@ package proto
 
 import (
 	"fmt"
+	"p2p-dev/assert"
 	"testing"
 	"unsafe"
 )
@@ -24,4 +25,21 @@ func TestMemory(t *testing.T) {
 	fmt.Printf("Offset of A: %d bytes\n", unsafe.Offsetof(example.A))
 	fmt.Printf("Offset of B: %d bytes\n", unsafe.Offsetof(example.B))
 	fmt.Printf("Offset of C: %d bytes\n", unsafe.Offsetof(example.C))
+}
+
+func TestUnpack(t *testing.T) {
+	buffer, err := Pack(&Message{
+		Header: Header{
+			Ver:    1,
+			Method: Conn,
+		},
+		Payload: []byte{0x01, 0x02, 0x03, 0x04},
+	})
+	assert.NoError(t, err)
+
+	msg, err := Unpack(buffer)
+	assert.NoError(t, err)
+
+	assert.Equals(t, msg.Ver, 1)
+	assert.Equals(t, msg.Method, Conn)
 }

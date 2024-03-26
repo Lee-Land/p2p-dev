@@ -8,9 +8,17 @@ const (
 	Addr
 )
 
+const (
+	headerLength = 4
+)
+
+type Header struct {
+	Ver    uint16
+	Method Method
+}
+
 type Message struct {
-	Ver     uint8
-	Method  Method
+	Header
 	Payload []byte
 }
 
